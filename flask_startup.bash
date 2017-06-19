@@ -1,0 +1,19 @@
+#! /bin/bash
+mkdir app
+touch app/__init__.py
+touch app/email.py
+touch app/models.py
+mkdir app/templates
+mkdir app/static
+mkdir app/main
+touch app/main/__init__.py
+touch app/main/errors.py
+touch app/main/forms.py
+touch app/main/views.py
+mkdir migrations
+mkdir tests
+touch tests/__init__.py
+touch tests/test.py
+touch config.py
+touch manage.py
+
