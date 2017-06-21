@@ -7,8 +7,9 @@ from flask_login import current_user, login_required
 
 from . import main
 from .. import db
-from .forms import NameForm, EditProfileForm
+from .forms import NameForm, EditProfileForm, EditProfileAdminForm
 from ..models import User
+from ..decorators import admin_required
 
 @main.route('/', methods=['GET', 'POST'])
 def index():
@@ -42,4 +43,29 @@ def edit_profile():
     form.location.data = current_user.location
     form.about_me.data = current_user.about_me
     return render_template('edit_profile.html', form=form)
+
+@main.route('/edit-profile/<int:id>', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def edit_profile_admin(id):
+    user = User.query.get_or_404(id)
+    form = EditProfileAdminForm(user=user)
+    if form.validate_on_submit():
+        user.email = form.email.data
+        user.username = form.username.data
+        user.confirmed = form.confirmed.data
+        user.role = form.role.data
+        user.location = form.location.data
+        user.about_me = form.about_me.data
+        db.session.add(current_user)
+        flash('Your profile has been updated.')
+        return redirect(url_for('.user', username=current_user.username))
+    form.email.data = user.email
+    form.username.data = user.name
+    form.confirmed.data = user.confirmed
+    form.role.data = user.role_id
+    form.name.data = user.name
+    form.location.data = user.location
+    form.about_me.data = user.about_me
+    return render_template('edit_profile.html', form=form, user=user)
 
