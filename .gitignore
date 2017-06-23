@@ -105,3 +105,6 @@ ENV/
 
 # migration
 migrations/versions/
+
+# vscode
+.vscode/
