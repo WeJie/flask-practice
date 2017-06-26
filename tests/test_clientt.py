@@ -42,7 +42,3 @@ class FlaskClientTestCase(unittest.TestCase):
         data = response.get_data(as_text=True)
         self.assertTrue('You have been logged out' in data)
 
-
-        
-
-
