@@ -193,7 +193,7 @@ def post(id):
     )
 
 @main.route('/shutdown')
-def server_shutdown:
+def server_shutdown():
     if not current_app.testing:
         abort(404)
     shutdown = request.environ.get('werkzeug.server.shutdown')
