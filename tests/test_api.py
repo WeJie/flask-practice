@@ -35,7 +35,7 @@ class APITest(unittest):
         self.assertTrue(json_response['url'] == url)
         self.assertTrue(json_response['body'] == 'body of the *body* post')
         self.assertTrue(json_response['body_html'] == '<p>body of the <em>blog</em> post</p>')
-        
+
 
 
 
