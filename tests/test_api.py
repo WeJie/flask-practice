@@ -2,7 +2,15 @@ import unittest
 from app import create_app, db
 from app.models import User, Role 
 
-class APITest(unittest):
+class APITest(unittest.TestCase):
+    def setUp(self):
+        self.app = create_app('testing')
+        self.app_context = self.app.app_context()
+        self.app_context.push()
+        db.create_all()
+        Role.insert_roles()
+        self.client = self.app.test_client()
+
     
     def get_api_headers(self, username, password):
         return {

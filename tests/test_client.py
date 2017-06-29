@@ -9,7 +9,7 @@ class FlaskClientTestCase(unittest.TestCase):
         self.app_context = self.app.app_context()
         self.app_context.push()
         db.create_all()
-        Role.create_all()
+        Role.insert_roles()
         self.client = self.app.test_client(user_cookies=True)
 
     def tearDown(self):
