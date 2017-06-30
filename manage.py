@@ -10,7 +10,7 @@ if os.environ.get('FLASK_COVERAGE'):
 from app import create_app, db
 from app.models import User, Role, Post
 from flask_script import Manager, Shell
-from flask_migrate import Migrate, MigrateCommand
+from flask_migrate import Migrate, MigrateCommand, upgrade
 
 
 app = create_app(os.getenv('FLASK_CONFIG') or 'default')
@@ -60,6 +60,11 @@ def profile(length=25, profile_dir=None):
         restrictions=[length], 
         profile_dir=profile_dir)
     app.run()
+
+@manager.command
+def deploy():
+    upgrade()
+
 
 if __name__ == '__main__':
     manager.run()
