@@ -247,7 +247,8 @@ class User(UserMixin, db.Model):
             db.session.delete(f)
     
     def is_following(self, user):
-        return self.followed.filter_by(followed_id=user.id).first() is not None
+        # return self.followed.filter_by(followed_id=user.id).first() is not None
+        return False
     
     def is_follow_by(self, user):
         return self.followers.filter_by(follower_id=user.id).first() is not None

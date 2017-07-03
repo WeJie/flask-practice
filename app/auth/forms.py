@@ -30,7 +30,7 @@ class RegistrationForm(FlaskForm):
         EqualTo('password2', message='Passwords must match.')
     ])
     password2 = PasswordField('confirm password', validators=[Required()])
-    recaptcha = RecaptchaField()
+    # recaptcha = RecaptchaField()
     submit = SubmitField('Register')
 
     def validate_email(self, field):
@@ -41,19 +41,19 @@ class RegistrationForm(FlaskForm):
         if User.query.filter_by(username=field.data).first():
             raise ValidationError('Username already in user.')
 
-    def validate(self):
-        check_validate = super(RegistrationForm, self).validate()
+    # def validate(self):
+    #     check_validate = super(RegistrationForm, self).validate()
         
-        if not check_validate:
-            return False
+    #     if not check_validate:
+    #         return False
 
-        user = User.query.filter_by(
-            username=self.username.data
-        ).first()
-        if user:
-            self.username.errors.append('User with that name already exists')
-            return False
+    #     user = User.query.filter_by(
+    #         username=self.username.data
+    #     ).first()
+    #     if user:
+    #         self.username.errors.append('User with that name already exists')
+    #         return False
 
-        return True
+    #     return True
 
 
