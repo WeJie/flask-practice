@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 
-from flask_wtf import FlaskForm
+from flask_wtf import FlaskForm, RecaptchaField
 from wtforms import StringField, PasswordField, BooleanField, SubmitField
 from wtforms.validators import Required, Length, Email, Regexp, EqualTo
 from wtforms import ValidationError
@@ -26,9 +26,11 @@ class RegistrationForm(FlaskForm):
                    'Usernames must have only letters, number, dots or undersores')])
     password = PasswordField('Password', validators=[
         Required(),
+        Length(min=8),
         EqualTo('password2', message='Passwords must match.')
     ])
     password2 = PasswordField('confirm password', validators=[Required()])
+    recaptcha = RecaptchaField()
     submit = SubmitField('Register')
 
     def validate_email(self, field):
@@ -38,4 +40,20 @@ class RegistrationForm(FlaskForm):
     def validate_username(self, field):
         if User.query.filter_by(username=field.data).first():
             raise ValidationError('Username already in user.')
+
+    def validate(self):
+        check_validate = super(RegistrationForm, self).validate()
+        
+        if not check_validate:
+            return False
+
+        user = User.query.filter_by(
+            username=self.username.data
+        ).first()
+        if user:
+            self.username.errors.append('User with that name already exists')
+            return False
+
+        return True
+
 

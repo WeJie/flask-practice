@@ -1,6 +1,10 @@
 {% extends "base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
 
+{% block head %}
+{{ super() }}
+<script src='https://www.google.com/recaptcha/api.js'></script>
+{% endblock %}
 {% block title %} Register {% endblock %}
 
 {% block page_content %}
@@ -10,4 +14,5 @@
 <div class="col-md-4">
     {{ wtf.quick_form(form) }}
 </div>
+<div class="g-recaptcha" data-sitekey="{{ public_key }}"></div>
 {% endblock %}
