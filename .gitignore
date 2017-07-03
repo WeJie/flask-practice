@@ -104,7 +104,7 @@ ENV/
 *.sqlite
 
 # migration
-migrations/versions/
+migrations/
 
 # vscode
 .vscode/
