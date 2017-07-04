@@ -4,15 +4,25 @@ from flask import render_template, redirect, request, url_for, flash, current_ap
 from flask_login import login_user,logout_user, login_required, current_user
 
 from . import auth
-from .. import db
+from .. import db, oid
 from ..models import User
-from .forms import LoginForm, RegistrationForm
+from .forms import LoginForm, RegistrationForm, OpenIDForm
 from ..email import send_email
 
 
 @auth.route('/login', methods=['GET', 'POST'])
+@oid.loginhandler
 def login():
     form = LoginForm()
+    openid_form = OpenIDForm()
+    
+    if openid_form.validate_on_submit():
+        return oid.try_login(
+            openid_form.openid.data,
+            ask_for=['nickname', 'email'],
+            ask_for_optional=['fullname']
+        )
+
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         if user is not None and user.verify_password(form.password.data):

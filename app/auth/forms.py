@@ -7,6 +7,9 @@ from wtforms import ValidationError
 
 from ..models import User
 
+class OpenIDForm(FlaskForm):
+    openid = StringField('OpenID URL', [DataRequired(), URL()])
+
 
 class LoginForm(FlaskForm):
     email = StringField('Email', validators=[Required(), Length(1, 64), Email()])
