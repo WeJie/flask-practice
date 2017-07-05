@@ -1,27 +1,28 @@
 # -*- coding:utf-8 -*-
 
-from flask import render_template, redirect, request, url_for, flash, current_app
+from flask import render_template, redirect, request, url_for, flash, current_app, session
 from flask_login import login_user,logout_user, login_required, current_user
 
 from . import auth
+from .forms import LoginForm, RegistrationForm, OpenIDForm
 from .. import db, oid
 from ..models import User
-from .forms import LoginForm, RegistrationForm, OpenIDForm
 from ..email import send_email
+from ..extensions import twitter 
 
 
 @auth.route('/login', methods=['GET', 'POST'])
 @oid.loginhandler
 def login():
     form = LoginForm()
-    openid_form = OpenIDForm()
+    # openid_form = OpenIDForm()
     
-    if openid_form.validate_on_submit():
-        return oid.try_login(
-            openid_form.openid.data,
-            ask_for=['nickname', 'email'],
-            ask_for_optional=['fullname']
-        )
+    # if openid_form.validate_on_submit():
+    #     return oid.try_login(
+    #         openid_form.openid.data,
+    #         ask_for=['nickname', 'email'],
+    #         ask_for_optional=['fullname']
+    #     )
 
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
@@ -31,6 +32,41 @@ def login():
         flash('Invalid username or password.')
     return render_template('auth/login.html', form=form)
 
+@auth.route('/twitter-login')
+def twitter_login():
+    print 'twitter here', twitter
+    twitter_auth = twitter.authorize(callback=url_for('.twitter_authorized'))
+    print 'twitter auth here', twitter_auth
+    return twitter_auth
+    
+    # return twitter.authorize(callback=url_for('.twitter_authorized',
+    #     next=request.args.get('next') or request.referrer or None))
+
+
+@auth.route('/twitter-login/authorized')
+@twitter.authorized_handler
+def twitter_authorized(resp):
+    print 'twitter callbakc here'
+    if resp is None:
+        return 'Access denied: reason: {} error: {}'.format(
+            requset.args['error_reason'],
+            request.args['error_description']
+        )
+    session['twitter_oauth_token'] = resp['oauth_token'] + resp['oauth_token_secret']
+
+    user = User.query.filter_by(
+        username=resp['screen_name']
+    )
+
+    if not user:
+        user = User(resp['screen_name'], '')
+        db.session.add(user)
+        db.session.commit()
+
+    flask("You have been logged in.", category="success")
+    return redirect(
+        request.args.get('next') or url_for('blog.home')
+    )
 
 @auth.route('/logout')
 @login_required

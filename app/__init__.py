@@ -7,7 +7,7 @@ from flask_moment import Moment
 from flask_sqlalchemy import SQLAlchemy 
 from flask_login import LoginManager
 from flask_pagedown import PageDown
-from flask_open import OpenID
+from flask_openid import OpenID
 from flask_oauth import OAuth
 
 from config import config
@@ -18,6 +18,7 @@ moment = Moment()
 db = SQLAlchemy()
 pagedown = PageDown()
 oid = OpenID()
+oauth = OAuth()
 
 login_manager = LoginManager()
 login_manager.session_protection = 'strong'

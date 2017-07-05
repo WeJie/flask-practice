@@ -2,13 +2,13 @@
 
 from flask_wtf import FlaskForm, RecaptchaField
 from wtforms import StringField, PasswordField, BooleanField, SubmitField
-from wtforms.validators import Required, Length, Email, Regexp, EqualTo
+from wtforms.validators import Required, Length, Email, Regexp, EqualTo, URL
 from wtforms import ValidationError
 
 from ..models import User
 
 class OpenIDForm(FlaskForm):
-    openid = StringField('OpenID URL', [DataRequired(), URL()])
+    openid = StringField('OpenID URL', [Required(), URL()])
 
 
 class LoginForm(FlaskForm):
