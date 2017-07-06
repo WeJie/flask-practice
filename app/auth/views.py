@@ -36,7 +36,7 @@ def login():
 def twitter_login():
     print 'twitter here', twitter
     twitter_auth = twitter.authorize(
-        callback=url_for('.twitter_authorized')
+        callback=url_for('.twitter_authorized'),
         next=request.referrer or None,
         _external=True
     )
