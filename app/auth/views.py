@@ -35,7 +35,11 @@ def login():
 @auth.route('/twitter-login')
 def twitter_login():
     print 'twitter here', twitter
-    twitter_auth = twitter.authorize(callback=url_for('.twitter_authorized'))
+    twitter_auth = twitter.authorize(
+        callback=url_for('.twitter_authorized')
+        next=request.referrer or None,
+        _external=True
+    )
     print 'twitter auth here', twitter_auth
     return twitter_auth
     
@@ -46,7 +50,7 @@ def twitter_login():
 @auth.route('/twitter-login/authorized')
 @twitter.authorized_handler
 def twitter_authorized(resp):
-    print 'twitter callbakc here'
+    print 'twitter callback here'
     if resp is None:
         return 'Access denied: reason: {} error: {}'.format(
             requset.args['error_reason'],

@@ -23,7 +23,7 @@ class Config:
     SQLALCHEMY_RECODE_QUERIES = True 
     FLASKY_SLOW_DB_QUERY_TIME = 0.5 
     RECAPTCHA_PUBLIC_KEY='6LcrtCcUAAAAAPWHYTrilK7O7LydPa4j-fjYH49K'
-    RECAPTCHA_PRIVATE_KEY='6LcrtCcUAAAAAFJuzi93k0jUkEZE_viLzatoszC-'
+    RECAPTCHA_PRIVATE_KEY=''
 
     @staticmethod
     def init_app(app):
