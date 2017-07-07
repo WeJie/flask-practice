@@ -12,6 +12,7 @@ from flask_oauth import OAuth
 
 from config import config
 
+
 bootstrap = Bootstrap()
 mail = Mail()
 moment = Moment()
@@ -19,10 +20,11 @@ db = SQLAlchemy()
 pagedown = PageDown()
 oid = OpenID()
 oauth = OAuth()
-
 login_manager = LoginManager()
 login_manager.session_protection = 'strong'
 login_manager.login_view = 'auth.login'
+login_manager.login_message = "Please login to access this page"
+login_manager.login_message_category = "info"
 
 
 def create_app(config_name):
@@ -40,11 +42,10 @@ def create_app(config_name):
 
     from .main import main as main_blueprint
     from .auth import auth as auth_blueprint
-    from .api_1_0 import api as api_1_0_blueprint 
+    from .api_1_0 import api as api_1_0_blueprint
 
     app.register_blueprint(auth_blueprint)
     app.register_blueprint(main_blueprint)
     app.register_blueprint(api_1_0_blueprint, url_prefix='/api/v1.0')
 
     return app
-
