@@ -14,11 +14,6 @@ from . import db, login_manager
 from app.exceptions import ValidationError
 
 
-@login_manager.user_loader
-def load_user(user_id):
-    return User.query.get(int(user_id))
-
-
 class Permission:
     FOLLOW = 0x01
     COMMENT = 0x02
@@ -275,7 +270,6 @@ class AnonymousUser(AnonymousUserMixin):
     def is_administrator(self):
         return False
 
-login_manager.anonymous_user = AnonymousUser
 
 tags = db.Table(
     'post_tags',
@@ -351,3 +345,10 @@ class Tag(db.Model):
     
     def __repr__(self):
         return "<Tag '{}'>".format(self.title)
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+
+login_manager.anonymous_user = AnonymousUser
