@@ -22,8 +22,14 @@ class Permission:
     ADMINISTER = 0x80
 
 
+class RoleUsers(db.Model):
+    __tablename__ = 'role_users'
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
+    role_id = db.Column(db.Integer, db.ForeignKey('role.id'), primary_key=True)
+
+
 class Role(db.Model):
-    __tablename__ = 'roles'
+    __tablename__ = 'role'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True)
     default = db.Column(db.Boolean, default=False, index=True)
@@ -57,42 +63,25 @@ class Role(db.Model):
         db.session.commit()
 
 
-
 class Follow(db.Model):
     __tablename__ = 'follows'
-    follower_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
-    followed_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
+    follower_id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
+    followed_id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
-
-class Comment(db.Model):
-    __tablename__ = 'comments'
-    id = db.Column(db.Integer, primary_key=True)
-    body = db.Column(db.Text)
-    body_html = db.Column(db.Text)
-    timestamp = db.Column(db.Text)
-    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
-    disabled = db.Column(db.Boolean)
-    author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    post_id = db.Column(db.Integer, db.ForeignKey('posts.id'))
-
-    @staticmethod
-    def on_changed_body(target, value, oldvalue, initiator):
-        allowed_tags = ['a', 'abbr', 'acronym', 'b', 'code', 'em', 'i', 'strong']
-        target.body_html = bleach.linkify(bleach.clean(
-            markdown(value, output_format='html'),
-            tags=allowed_tags, strip=True
-        ))
-
-db.event.listen(Comment.body, 'set', Comment.on_changed_body)
 
 
 class User(UserMixin, db.Model):
-    __tablename__ = 'users'
+    __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(64), unique=True, index=True)
     username = db.Column(db.String(64), unique=True, index=True)
     password_hash = db.Column(db.String(128))
-    role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
+    role_id = db.Column(db.Integer, db.ForeignKey('role.id'))
+    roles = db.relationship(
+        'Role',
+        secondary='role_users',
+        backref=db.backref('users', lazy='dynamic')
+    )
     confirmed = db.Column(db.Boolean, default=False)
     name = db.Column(db.String(64))
     location = db.Column(db.String(64))
@@ -101,8 +90,20 @@ class User(UserMixin, db.Model):
     last_seen = db.Column(db.DateTime(), default=datetime.utcnow)
     avatar_hash = db.Column(db.String(32))
     posts = db.relationship('Post', backref='author', lazy='dynamic')
-    followed = db.relationship('Follow', foreign_keys=[Follow.follower_id], backref=db.backref('follower', lazy='joined'), lazy='dynamic', cascade='all, delete-orphan')
-    followers = db.relationship('Follow', foreign_keys=[Follow.followed_id], backref=db.backref('followed', lazy='joined'), lazy='dynamic', cascade='all, delete-orphan')
+    followed = db.relationship(
+        'Follow', 
+        foreign_keys=[Follow.follower_id], 
+        backref=db.backref('follower', lazy='joined'), 
+        lazy='dynamic', 
+        cascade='all, delete-orphan'
+    )
+    followers = db.relationship(
+        'Follow', 
+        foreign_keys=[Follow.followed_id], 
+        backref=db.backref('followed', lazy='joined'), 
+        lazy='dynamic', 
+        cascade='all, delete-orphan'
+    )
     comments = db.relationship('Comment', backref='author', lazy='dynamic')
 
     def __init__(self, **kwargs):
@@ -263,6 +264,7 @@ class User(UserMixin, db.Model):
         }
         return json_user
 
+
 class AnonymousUser(AnonymousUserMixin):
     def can(self, permissions):
         return False
@@ -271,21 +273,19 @@ class AnonymousUser(AnonymousUserMixin):
         return False
 
 
-tags = db.Table(
-    'post_tags',
-    db.Column('post_id', db.Integer, db.ForeignKey('posts.id')),
-    db.Column('tag_id', db.Integer, db.ForeignKey('tag.id'))
-)
-
 class Post(db.Model):
     __tablename__ = 'posts'
     id = db.Column(db.Integer, primary_key=True)
     body = db.Column(db.Text)
     body_html = db.Column(db.Text)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
-    author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    author_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     comments = db.relationship('Comment', backref='post', lazy='dynamic')
-    tags = db.relationship('Tag', secondary=tags, backref=db.backref('posts', lazy='dynamic'))
+    tags = db.relationship(
+        'Tag', 
+        secondary='post_tags', 
+        backref=db.backref('posts', lazy='dynamic')
+    )
 
     @staticmethod
     def generate_fake(count=100):
@@ -330,10 +330,27 @@ class Post(db.Model):
             'comment_count': self.comments.count()
         }
         return json_post
-    
-        
 
-db.event.listen(Post.body, 'set', Post.on_changed_body)
+
+class Comment(db.Model):
+    __tablename__ = 'comment'
+    id = db.Column(db.Integer, primary_key=True)
+    body = db.Column(db.Text)
+    body_html = db.Column(db.Text)
+    timestamp = db.Column(db.Text)
+    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    disabled = db.Column(db.Boolean)
+    author_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    post_id = db.Column(db.Integer, db.ForeignKey('posts.id'))
+
+    @staticmethod
+    def on_changed_body(target, value, oldvalue, initiator):
+        allowed_tags = ['a', 'abbr', 'acronym', 'b', 'code', 'em', 'i', 'strong']
+        target.body_html = bleach.linkify(bleach.clean(
+            markdown(value, output_format='html'),
+            tags=allowed_tags, strip=True
+        ))
+
 
 class Tag(db.Model):
     __tablename__ = 'tag'
@@ -346,9 +363,13 @@ class Tag(db.Model):
     def __repr__(self):
         return "<Tag '{}'>".format(self.title)
 
+class PostTag(db.Model):
+    __tablename__ = 'post_tags'
+    post_id = db.Column(db.Integer, db.ForeignKey('posts.id'), primary_key=True)
+    tagid = db.Column(db.Integer, db.ForeignKey('tag.id'), primary_key=True)
 
-@login_manager.user_loader
-def load_user(user_id):
-    return User.query.get(int(user_id))
+
+db.event.listen(Post.body, 'set', Post.on_changed_body)
+db.event.listen(Comment.body, 'set', Comment.on_changed_body)
 
 login_manager.anonymous_user = AnonymousUser

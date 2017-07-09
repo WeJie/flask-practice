@@ -5,10 +5,11 @@ from flask_bootstrap import Bootstrap
 from flask_mail import Mail 
 from flask_moment import Moment 
 from flask_sqlalchemy import SQLAlchemy 
-from flask_login import LoginManager
+from flask_login import LoginManager, current_user
 from flask_pagedown import PageDown
 from flask_openid import OpenID
 from flask_oauth import OAuth
+from flask_principal import Principal, Permission, RoleNeed, identity_loaded
 
 from config import config
 
@@ -20,11 +21,17 @@ db = SQLAlchemy()
 pagedown = PageDown()
 oid = OpenID()
 oauth = OAuth()
+principals = Principal()
 login_manager = LoginManager()
+
 login_manager.session_protection = 'strong'
 login_manager.login_view = 'auth.login'
 login_manager.login_message = "Please login to access this page."
 login_manager.login_message_category = "info"
+
+admin_permission = Permission(RoleNeed('admin'))
+poster_permission = Permission(RoleNeed('poster'))
+default_permission = Permission(RoleNeed('default'))
 
 
 def create_app(config_name):
@@ -48,4 +55,13 @@ def create_app(config_name):
     app.register_blueprint(main_blueprint)
     app.register_blueprint(api_1_0_blueprint, url_prefix='/api/v1.0')
 
+    @identity_loaded.connect_via
+    def on_indetity_loaded(sender, identity):
+        # Set the identity user object
+        identity.user = current_user
+        
+        if hasattr(current_user, 'id'):
+            for role in current_user.roles:
+                pass
+                
     return app

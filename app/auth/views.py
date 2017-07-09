@@ -5,7 +5,7 @@ from flask_login import login_user,logout_user, login_required, current_user
 
 from . import auth
 from .forms import LoginForm, RegistrationForm, OpenIDForm
-from .. import db, oid
+from .. import db, oid, login_manager
 from ..models import User
 from ..email import send_email
 from ..extensions import twitter 
@@ -34,6 +34,11 @@ def login():
             return redirect(request.args.get('next') or url_for('main.index'))
         flash('Invalid username or password.')
     return render_template('auth/login.html', form=form)
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+
 
 @auth.route('/twitter-login')
 def twitter_login():
