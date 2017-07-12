@@ -48,8 +48,8 @@ class EditProfileAdminForm(FlaskForm):
             raise ValidationError('Username already in user.')
 
 class PostForm(FlaskForm):
-
-    body = PageDownField("What's on your mind?", validators=[Required()])
+    title = StringField('Title', validators=[Required(), Length(0, 32)])
+    body = PageDownField('', validators=[Required()])
     submit = SubmitField('Submit')
 
 

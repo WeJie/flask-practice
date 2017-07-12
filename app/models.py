@@ -75,7 +75,6 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(64), unique=True, index=True)
     username = db.Column(db.String(64), unique=True, index=True)
     password_hash = db.Column(db.String(128))
-    role_id = db.Column(db.Integer, db.ForeignKey('role.id'))
     roles = db.relationship(
         'Role',
         secondary='role_users',
@@ -107,11 +106,10 @@ class User(UserMixin, db.Model):
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
-        if self.role is None:
-            if self.email == current_app.config['FLASKY_ADMIN']:
-                self.role = Role.query.filter_by(permissions=0xff).first()
-            if self.role is None:
-                self.role = Role.query.filter_by(default=True).first()
+
+        # default = Role.query.filter_by(name='default').one()
+        # self.roles.append(default)
+
         if self.email is not None and self.avatar_hash is None:
             self.avatar_hash = hashlib.md5(self.email.encode('utf-8')).hexdigest()
         self.follow(self)
@@ -273,17 +271,19 @@ class AnonymousUser(AnonymousUserMixin):
 
 
 class Post(db.Model):
-    __tablename__ = 'posts'
+    __tablename__ = 'post'
     id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(32))
     body = db.Column(db.Text)
     body_html = db.Column(db.Text)
+    brief_body_html = db.Column(db.Text)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     author_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     comments = db.relationship('Comment', backref='post', lazy='dynamic')
     tags = db.relationship(
         'Tag', 
         secondary='post_tags', 
-        backref=db.backref('posts', lazy='dynamic')
+        backref=db.backref('post', lazy='dynamic')
     )
 
     @staticmethod
@@ -304,6 +304,8 @@ class Post(db.Model):
 
     @staticmethod
     def on_changed_body(target, value, oldvalue, initiator):
+        print 'change post body type', type(value)
+        print 'change post body value', value
         allowed_tags = ['a', 'abbr', 'acronym', 'b', 'blockquote', 'code',
                         'em', 'i', 'li', 'ol', 'pre', 'strong', 'ul',
                         'h1', 'h2', 'h3', 'p']
@@ -340,7 +342,7 @@ class Comment(db.Model):
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     disabled = db.Column(db.Boolean)
     author_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    post_id = db.Column(db.Integer, db.ForeignKey('posts.id'))
+    post_id = db.Column(db.Integer, db.ForeignKey('post.id'))
 
     @staticmethod
     def on_changed_body(target, value, oldvalue, initiator):
@@ -364,7 +366,7 @@ class Tag(db.Model):
 
 class PostTag(db.Model):
     __tablename__ = 'post_tags'
-    post_id = db.Column(db.Integer, db.ForeignKey('posts.id'), primary_key=True)
+    post_id = db.Column(db.Integer, db.ForeignKey('post.id'), primary_key=True)
     tagid = db.Column(db.Integer, db.ForeignKey('tag.id'), primary_key=True)
 
 

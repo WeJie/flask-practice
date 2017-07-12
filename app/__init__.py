@@ -9,7 +9,8 @@ from flask_login import LoginManager, current_user
 from flask_pagedown import PageDown
 from flask_openid import OpenID
 from flask_oauth import OAuth
-from flask_principal import Principal, Permission, RoleNeed, identity_loaded
+from flask_principal import Principal, Permission, RoleNeed, UserNeed, \
+    identity_loaded
 from flask_restful import Api
 
 from config import config
@@ -58,13 +59,16 @@ def create_app(config_name):
     app.register_blueprint(main_blueprint)
     app.register_blueprint(api_1_0_blueprint, url_prefix='/api/v1.0')
 
-    @identity_loaded.connect_via
+    @identity_loaded.connect_via(app)
     def on_indetity_loaded(sender, identity):
         # Set the identity user object
         identity.user = current_user
         
         if hasattr(current_user, 'id'):
+            identity.provides.add(UserNeed(current_user.id))
+
+        if hasattr(current_user, 'roles'):
             for role in current_user.roles:
-                pass
+                identity.provides.add(RoleNeed(role.name))
                 
     return app

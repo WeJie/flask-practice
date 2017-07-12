@@ -15,29 +15,14 @@ from ..decorators import admin_required, permission_required
 
 @main.route('/', methods=['GET', 'POST'])
 def index():
-    # form = NameForm()
-    form = PostForm()
-    # if current_user.can(Permission.WRITE_ARTICLES) and form.validate_on_submit():
-    if form.validate_on_submit():
-        post = Post(body=form.body.data, author=current_user._get_current_object())
-        db.session.add(post)
-        return redirect(url_for('.index'))
-    
-    show_followed = False
-    if current_user.is_authenticated:
-        show_followed = bool(request.cookies.get('show_followed', '')) 
-
-    if show_followed:
-        query = current_user.followed_posts
-    else:
-        query = Post.query
+    query = Post.query
     page = request.args.get('page', 1, type=int)
     pagination = query.order_by(Post.timestamp.desc()).paginate(
         page, per_page=current_app.config['FLASKY_POST_PER_PAGE'],
         error_out=False
     )
     posts = pagination.items
-    return render_template('index.html', form=form, posts=posts, 
+    return render_template('index.html', posts=posts, 
         show_followed=show_followed, pagination=pagination)
 
 @main.route('/all')
@@ -101,6 +86,20 @@ def edit_profile_admin(id):
     form.location.data = user.location
     form.about_me.data = user.about_me
     return render_template('edit_profile.html', form=form, user=user)
+
+@main.route('/post/new/', methods=['GET', 'POST'])
+def create_post():
+    form = PostForm()
+    if form.validate_on_submit():
+        post = Post(
+            title=form.title.data,
+            body=form.body.data,
+            author=current_user._get_current_object()
+        )
+        db.session.add(post)
+        return redirect(url_for('.index'))
+    return render_template('post.html', form=form)
+
 @main.route('/edit/<int:id>')
 @login_required
 def edit(id):
