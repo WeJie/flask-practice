@@ -7,11 +7,19 @@ Post
 {% endblock %}
 
 {% block page_content %}
+
 {{ wtf.quick_form(form) }}
+
 {% include '_comments.html' %}
 {% if pagination %}
 <div class="pagination">
     {{ macros.pagination_widget(pagination, '.post', fragment='#comments', id=posts[0].id) }}
 </div>
 {% endif %}
+
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+{{ pagedown.include_pagedown() }}
 {% endblock %}
