@@ -65,6 +65,24 @@ def profile(length=25, profile_dir=None):
 def deploy():
     upgrade()
 
+@manager.command
+def setup_db():
+
+    admin_role = Role()
+    admin_role.name = 'admin'
+    db.session.add(admin_role)
+
+    default_role = Role()
+    default_role.name = 'default'
+    db.session.add(default_role)
+
+    admin = User()
+    admin.username = 'admin'
+    admin.password = 'password'
+    admin.roles.append(admin_role)
+    db.session.add(admin)
+
+    db.session.commit()
 
 if __name__ == '__main__':
     manager.run()
