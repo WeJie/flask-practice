@@ -1,36 +1,29 @@
 # -*- coding:utf-8 -*-
 
 from flask import Flask 
-from flask_bootstrap import Bootstrap
-from flask_mail import Mail 
-from flask_moment import Moment 
-from flask_sqlalchemy import SQLAlchemy 
-from flask_login import LoginManager, current_user
-from flask_pagedown import PageDown
-from flask_openid import OpenID
-from flask_oauth import OAuth
+from flask_login import current_user
 from flask_principal import Principal, Permission, RoleNeed, UserNeed, \
     identity_loaded
-from flask_restful import Api
 
 from config import config
+from .extensions import (
+    debug_toolbar, 
+    bootstrap,
+    db, 
+    login_manager,
+    mail, 
+    moment,
+    oauth,
+    oid,
+    pagedown,
+    principals,
+    rest_api
+)
 
-
-bootstrap = Bootstrap()
-mail = Mail()
-moment = Moment()
-db = SQLAlchemy()
-pagedown = PageDown()
-oid = OpenID()
-oauth = OAuth()
-rest_api = Api()
-principals = Principal()
-login_manager = LoginManager()
-
-login_manager.session_protection = 'strong'
 login_manager.login_view = 'auth.login'
 login_manager.login_message = "Please login to access this page."
 login_manager.login_message_category = "info"
+login_manager.session_protection = 'strong'
 
 admin_permission = Permission(RoleNeed('admin'))
 poster_permission = Permission(RoleNeed('poster'))
@@ -43,12 +36,13 @@ def create_app(config_name):
     config[config_name].init_app(app)
 
     bootstrap.init_app(app)
+    db.init_app(app)
+    debug_toolbar.init_app(app)
+    login_manager.init_app(app)
     mail.init_app(app)
     moment.init_app(app)
-    db.init_app(app)
-    login_manager.init_app(app)
-    pagedown.init_app(app)
     oid.init_app(app)
+    pagedown.init_app(app)
     rest_api.init_app(app)
 
     from .main import main as main_blueprint
