@@ -34,12 +34,16 @@ class DevelopmentConfig(Config):
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL') or \
             'sqlite:///' + os.path.join(basedir, 'data-dev.sqlite')
+    CELERY_BROKER_URL = 'amqp://guest:guest@localhost:5672//'
+    CELERY_BACKEND_URL = 'amqp://guest:guest@localhost:5672//'
 
 
 class TestingConfig(Config):
     TESTING = True
     SQLALCHEMY_DATABASE_URI = os.environ.get('TEST_DATABASE_URL') or\
             'sqlite:///' + os.path.join(basedir, 'data-test.sqlite')
+    CELERY_BROKER_URL = 'amqp://guest:guest@localhost:5672//'
+    CELERY_BACKEND_URL = 'amqp://guest:guest@localhost:5672//'
 
 
 class ProductionConfig(Config):

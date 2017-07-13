@@ -2,6 +2,9 @@
 import os
 
 from app import oauth
+from flask_celery import Celery
+
+celery = Celery()
 
 twitter = oauth.remote_app(
     'twitter',
