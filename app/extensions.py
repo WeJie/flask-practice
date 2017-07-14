@@ -1,6 +1,7 @@
 # -*- coding:utf-8 -*-
 import os
 
+from flask_admin import Admin
 from flask_bootstrap import Bootstrap
 from flask_celery import Celery
 from flask_debugtoolbar import DebugToolbarExtension
@@ -15,7 +16,7 @@ from flask_principal import Principal, Permission, RoleNeed, UserNeed, \
 from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy 
 
-
+admin = Admin()
 bootstrap = Bootstrap()
 celery = Celery()
 db = SQLAlchemy()

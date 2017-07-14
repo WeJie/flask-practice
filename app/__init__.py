@@ -6,7 +6,9 @@ from flask_principal import Principal, Permission, RoleNeed, UserNeed, \
     identity_loaded
 
 from config import config
+from .controllers.admin import CustomView
 from .extensions import (
+    admin,
     debug_toolbar, 
     bootstrap,
     db, 
@@ -35,6 +37,7 @@ def create_app(config_name):
     app.config.from_object(config[config_name])
     config[config_name].init_app(app)
 
+    admin.init_app(app)
     bootstrap.init_app(app)
     db.init_app(app)
     debug_toolbar.init_app(app)
@@ -45,6 +48,7 @@ def create_app(config_name):
     pagedown.init_app(app)
     rest_api.init_app(app)
 
+    admin.add_view(CustomView(name='Custom'))
     from .main import main as main_blueprint
     from .auth import auth as auth_blueprint
     from .api_1_0 import api as api_1_0_blueprint
