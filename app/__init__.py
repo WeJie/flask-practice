@@ -6,7 +6,7 @@ from flask_principal import Principal, Permission, RoleNeed, UserNeed, \
     identity_loaded
 
 from config import config
-from .controllers.admin import CustomView
+from .controllers.admin import CustomView, CustomModelView
 from .extensions import (
     admin,
     debug_toolbar, 
@@ -21,6 +21,7 @@ from .extensions import (
     principals,
     rest_api
 )
+from .models import Role, Follow, User, Post, Comment, Tag 
 
 login_manager.login_view = 'auth.login'
 login_manager.login_message = "Please login to access this page."
@@ -49,6 +50,13 @@ def create_app(config_name):
     rest_api.init_app(app)
 
     admin.add_view(CustomView(name='Custom'))
+    models = [ Role, Follow, User, Post, Comment, Tag]
+
+    for model in models:
+        admin.add_view(
+            CustomModelView(model, db.session, category='models')
+        )
+
     from .main import main as main_blueprint
     from .auth import auth as auth_blueprint
     from .api_1_0 import api as api_1_0_blueprint
