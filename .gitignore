@@ -108,3 +108,6 @@ ENV/
 
 # Migration
 migrations/
+
+# PyCharm
+.idea/

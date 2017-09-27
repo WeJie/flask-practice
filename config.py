@@ -8,6 +8,7 @@ class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'hard to guess string'
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SQLALCHEMY_ECHO = True
     MAIL_SERVER = 'smtp.googlemail.com'
     MAIL_PORT = 587
     MAIL_USE_TLS = True
@@ -72,7 +73,9 @@ class ProductionConfig(Config):
             mail_handler.setLevel(logging.ERROR)
             app.logger.addHandler(mail_handler)
 
+
 class HerokuConfig(ProductionConfig):
+
     @classmethod
     def init_app(app):
         ProductionConfig.init_app(app)
@@ -90,5 +93,3 @@ config = {
     'heroku': HerokuConfig,
     'default': DevelopmentConfig
 }
-
- 
