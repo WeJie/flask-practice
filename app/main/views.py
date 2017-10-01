@@ -9,9 +9,10 @@ from flask_sqlalchemy import get_debug_queries
 
 from . import main
 from .. import db
-from .forms import PostForm, NameForm, EditProfileForm, EditProfileAdminForm,CommentForm
+from .forms import PostForm, NameForm, EditProfileForm, EditProfileAdminForm, CommentForm
 from ..models import User, Post, Permission, Comment
 from ..decorators import admin_required, permission_required
+
 
 @main.route('/', methods=['GET', 'POST'])
 def index():
@@ -22,21 +23,29 @@ def index():
         error_out=False
     )
     posts = pagination.items
-    return render_template('index.html', posts=posts, 
-        show_followed=show_followed, pagination=pagination)
+    return render_template('index.html', posts=posts,
+                           show_followed=show_followed, pagination=pagination)
+
+
+@main.route('/hello')
+def hello():
+    return "Hello"
+
 
 @main.route('/all')
 def show_all():
-    resp = make_reponse(redirect(url_for('.index')))
+    resp = make_response(redirect(url_for('.index')))
     resp.set_cookie('show_followed', '', max_age=30*24*60*60)
     return resp
+
 
 @main.route('/followed')
 @login_required
 def show_followed():
-    resp = make_reponse(redirect(url_for('.index')))
+    resp = make_response(redirect(url_for('.index')))
     resp.set_cookie('show_followed', '1', max_age=30*24*60*60)
     return resp
+
 
 @main.route('/user/<username>')
 def user(username):
@@ -45,6 +54,7 @@ def user(username):
         abort(404)
     posts = user.posts.order_by(Post.timestamp.desc()).all()
     return render_template('user.html', user=user, posts=posts)
+
 
 @main.route('/edit-profile', methods=['GET', 'POST'])
 @login_required
@@ -61,6 +71,7 @@ def edit_profile():
     form.location.data = current_user.location
     form.about_me.data = current_user.about_me
     return render_template('edit_profile.html', form=form)
+
 
 @main.route('/edit-profile/<int:id>', methods=['GET', 'POST'])
 @login_required
@@ -87,6 +98,7 @@ def edit_profile_admin(id):
     form.about_me.data = user.about_me
     return render_template('edit_profile.html', form=form, user=user)
 
+
 @main.route('/post/new/', methods=['GET', 'POST'])
 def create_post():
     form = PostForm()
@@ -99,6 +111,7 @@ def create_post():
         db.session.add(post)
         return redirect(url_for('.index'))
     return render_template('post.html', form=form)
+
 
 @main.route('/edit/<int:id>')
 @login_required
@@ -115,6 +128,7 @@ def edit(id):
     form.body.data = post.body
     return render_template('edit_post.html', form=form)
 
+
 @main.route('/follow/<username>')
 @login_required
 @permission_required(Permission.FOLLOW)
@@ -129,6 +143,7 @@ def follow(username):
     current_user.follow(user)
     flash('You are now following %s.' % username)
     return redirect(url_for('.user', username=username))
+
 
 @main.route('/follower/<username>')
 @login_required
@@ -167,6 +182,7 @@ def followed_by(username):
                            endpoint='.followed_by', pagination=pagination,
                            follows=follows)
 
+
 @main.route('/post/<int:id>', methods=['GET','POST'])
 def post(id):
     post = Post.query.get_or_404(id)
@@ -189,8 +205,8 @@ def post(id):
     )
     comments = pagination.items
     return render_template('post.html', posts=[post], form=form,
-        comments=comments, pagination=pagination
-    )
+                           comments=comments, pagination=pagination)
+
 
 @main.route('/shutdown')
 def server_shutdown():
@@ -201,6 +217,7 @@ def server_shutdown():
         abort(500)
     shutdown()
     return 'Shutting down...'
+
 
 @main.after_app_request
 def after_request(response):

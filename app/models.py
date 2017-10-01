@@ -70,7 +70,7 @@ class Follow(db.Model):
 
 
 class User(UserMixin, db.Model):
-    __tablename__  ='user'
+    __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(64), unique=True, index=True)
     username = db.Column(db.String(64), unique=True, index=True)
@@ -281,8 +281,8 @@ class Post(db.Model):
     author_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     comments = db.relationship('Comment', backref='post', lazy='dynamic')
     tags = db.relationship(
-        'Tag', 
-        secondary='post_tags', 
+        'Tag',
+        secondary='post_tags',
         backref=db.backref('post', lazy='dynamic')
     )
 
@@ -363,6 +363,7 @@ class Tag(db.Model):
     
     def __repr__(self):
         return "<Tag '{}'>".format(self.title)
+
 
 class PostTag(db.Model):
     __tablename__ = 'post_tags'

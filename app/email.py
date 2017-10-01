@@ -13,6 +13,7 @@ def send_async_email(app, msg):
     with app.app_context():
         mail.send(msg)
 
+
 def send_email(to, subject, template, **kwargs):
     msg = Message(app.config['FLASKY_MAIL_SUBJECT_PREFIX'] + subject,
                   send=app.config['FLASKY_MAIL_SENDER'], recipients=[to])
@@ -22,4 +23,3 @@ def send_email(to, subject, template, **kwargs):
     thr.start()
     return thr
 
-            
