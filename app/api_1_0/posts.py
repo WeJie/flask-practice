@@ -28,11 +28,13 @@ def get_posts():
         'next': next,
         'count': pagination.total
     })
-    
+
+
 @api.route('/posts/<int:id>')
 def get_post(id):
     post = Post.query.get_or_404(id)
     return jsonify(post.to_json())
+
 
 @api.route('/posts/', methods=['POST'])
 @permission_required(Permission.WRITE_ARTICLES)
@@ -43,6 +45,7 @@ def new_post():
    db.session.commit()
    return jsonify(post.to_json()), 201, \
         {'Location': url_for('api.get_post', id=post.id, _external=True)}
+
 
 @api.route('/posts/<int:id>')
 @permission_required(Permission.WRITE_ARTICLES)

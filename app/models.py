@@ -19,7 +19,7 @@ class Permission:
     COMMENT = 0x02
     WRITE_ARTICLES = 0x04
     MODERATE_COMMENTS = 0x08
-    ADMINISTER = 0x80
+    ADMINISTER = 0xff
 
 
 class RoleUsers(db.Model):
@@ -50,7 +50,7 @@ class Role(db.Model):
                 Permission.COMMENT |
                 Permission.WRITE_ARTICLES |
                 Permission.MODERATE_COMMENTS, False),
-            'Administrator': (0xff, False)
+            'Administrator': (Permission.ADMINISTER, False)
         }
         for r in roles:
             role = Role.query.filter_by(name=r).first()
@@ -263,6 +263,7 @@ class User(UserMixin, db.Model):
 
 
 class AnonymousUser(AnonymousUserMixin):
+
     def can(self, permissions):
         return False
     

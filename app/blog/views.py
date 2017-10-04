@@ -1,17 +1,31 @@
 # -*- coding:utf-8 -*-
 
-from datetime import datetime
-
 from flask import render_template, session, redirect, url_for, abort, flash,\
     request, current_app, make_response
 from flask_login import current_user, login_required
 from flask_sqlalchemy import get_debug_queries
+from flask_principal import Principal, Permission, RoleNeed
 
 from . import main
 from .. import db
 from .forms import PostForm, NameForm, EditProfileForm, EditProfileAdminForm, CommentForm
-from ..models import User, Post, Permission, Comment
+from ..models import User, Post, Comment#, Permission
 from ..decorators import admin_required, permission_required
+
+test_permission = Permission(RoleNeed('tester'))
+
+
+@main.route('/re_test', methods=['GET', 'POST'])
+@test_permission.require()
+def re_test():
+    return render_template('only you are tester')
+
+
+@main.route('/re_test2', methods=['GET', 'POST'])
+def re_test2():
+    print 'Hello World'
+    with test_permission.require():
+        return render_template('only you are tester2')
 
 
 @main.route('/', methods=['GET', 'POST'])
@@ -131,7 +145,7 @@ def edit(id):
 
 @main.route('/follow/<username>')
 @login_required
-@permission_required(Permission.FOLLOW)
+#@permission_required(Permission.FOLLOW)
 def follow(username):
     user = User.query.filter_by(username=username).first()
     if user is None:
@@ -147,7 +161,7 @@ def follow(username):
 
 @main.route('/follower/<username>')
 @login_required
-@permission_required(Permission.FOLLOW)
+#@permission_required(Permission.FOLLOW)
 def followers(username):
     user = User.query.filter_by(username=username).first()
     if user is None:
