@@ -72,6 +72,11 @@ def deploy():
 
 @manager.command
 def setup_db():
+    """
+    Just for develop
+    """
+
+    db.create_all()
 
     admin_role = Role()
     admin_role.name = 'admin'
@@ -83,7 +88,8 @@ def setup_db():
 
     admin = User()
     admin.username = 'admin'
-    admin.password = 'password'
+    admin.password = 'admin'
+    admin.phone = 'admin'
     admin.roles.append(admin_role)
     db.session.add(admin)
 

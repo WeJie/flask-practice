@@ -3,7 +3,7 @@
 from flask import render_template, redirect, request, url_for, flash, \
     current_app, session
 from flask_login import login_user,logout_user, login_required, current_user
-from flask_principal import Identity, AnonymousIdentity, identity_changed
+from sqlalchemy import or_
 
 from . import auth
 from .forms import LoginForm, RegistrationForm, OpenIDForm
@@ -27,7 +27,10 @@ def login():
     #     )
 
     if form.validate_on_submit():
-        user = User.query.filter_by(email=form.email.data).first()
+
+        user = User.query.filter(or_(
+            User.email == form.login.data,
+            User.phone == form.login.data)).first()
         if user is not None and user.verify_password(form.password.data):
             login_user(user, form.remember_me.data)
 
@@ -40,6 +43,7 @@ def login():
             return redirect(next_request or url_for('main.index'))
         flash('Invalid username or password.')
     return render_template('auth/login.html', form=form)
+
 
 @login_manager.user_loader
 def load_user(user_id):
