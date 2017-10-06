@@ -4,7 +4,7 @@ from flask import render_template, session, redirect, url_for, abort, flash,\
     request, current_app, make_response
 from flask_login import current_user, login_required
 from flask_sqlalchemy import get_debug_queries
-from flask_principal import Principal, Permission, RoleNeed
+from flask_principal import Permission, RoleNeed
 
 from . import main
 from .. import db
@@ -127,19 +127,24 @@ def create_post():
     return render_template('post.html', form=form)
 
 
-@main.route('/edit/<int:id>', methods=['GET', 'POST'])
+@main.route('/edit/<int:post_id>', methods=['GET', 'POST'])
 @login_required
-def edit(id):
-    post = Post.query.get_or_404(id)
+def edit(post_id):
+    post = Post.query.get_or_404(post_id)
     if current_user != post.author:
         abort(404)
+
     form = PostForm()
+
     if form.validate_on_submit():
         post.body = form.body.data
+        post.title = form.title.data
         db.session.add(post)
         flash('The post has been updated.')
         return redirect(url_for('.post', post_id=post.id))
+
     form.body.data = post.body
+    form.title.data = post.title
     return render_template('edit_post.html', form=form)
 
 
