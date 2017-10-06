@@ -25,8 +25,10 @@ ul.posts li.post {
 ul.posts li.post:hover {
     background-color: #f0f0f0;
 }
+h3.post-title{
+    color: #1e70bf;
+}
 div.post-date {
-    float: right;
 }
 div.post-author {
     font-weight: bold;
@@ -39,7 +41,6 @@ div.post-content {
     min-height: 48px;
 }
 div.post-footer {
-    text-align: right;
 }
 ul.comments {
     list-style-type: none;
