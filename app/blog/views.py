@@ -127,7 +127,7 @@ def create_post():
     return render_template('post.html', form=form)
 
 
-@main.route('/edit/<int:id>')
+@main.route('/edit/<int:id>', methods=['GET', 'POST'])
 @login_required
 def edit(id):
     post = Post.query.get_or_404(id)
@@ -138,7 +138,7 @@ def edit(id):
         post.body = form.body.data
         db.session.add(post)
         flash('The post has been updated.')
-        return redirect(url_for('.post', id=post.id))
+        return redirect(url_for('.post', post_id=post.id))
     form.body.data = post.body
     return render_template('edit_post.html', form=form)
 
