@@ -3,7 +3,7 @@
     <li class="post">
         <div class="post-content">
             <h3 class="post-title">
-                <a href="{{ url_for('.post', id=post.id) }}">
+                <a href="{{ url_for('.post', post_id=post.id) }}">
                     {{ post.title }}
                 </a>
             </h3>
@@ -21,7 +21,7 @@
                     <span class="label label-primary">Edit</span>
                 </a>
                 {% endif %}
-                <a href="{{ url_for('.post', id=post.id) }}">
+                <a href="{{ url_for('.post', post_id=post.id) }}">
                     <span class="label label-default">Read More...</span>
                 </a>
             </div>

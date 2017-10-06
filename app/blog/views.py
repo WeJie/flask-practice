@@ -145,7 +145,6 @@ def edit(id):
 
 @main.route('/follow/<username>')
 @login_required
-#@permission_required(Permission.FOLLOW)
 def follow(username):
     user = User.query.filter_by(username=username).first()
     if user is None:
@@ -161,7 +160,6 @@ def follow(username):
 
 @main.route('/follower/<username>')
 @login_required
-#@permission_required(Permission.FOLLOW)
 def followers(username):
     user = User.query.filter_by(username=username).first()
     if user is None:
@@ -197,9 +195,9 @@ def followed_by(username):
                            follows=follows)
 
 
-@main.route('/post/<int:id>', methods=['GET','POST'])
-def post(id):
-    post = Post.query.get_or_404(id)
+@main.route('/post/<int:post_id>', methods=['GET','POST'])
+def post(post_id):
+    post = Post.query.get_or_404(post_id)
     form = CommentForm()
     if form.validate_on_submit():
         comment = Comment(
@@ -209,7 +207,8 @@ def post(id):
         )
         db.session.add(comment)
         flash('Your comment has been published.')
-        return redirect(url_for('.post', id=post.id, page=-1))
+        return redirect(url_for('.post', post_id=post.id, page=-1))
+
     page = request.args.get('page', 1, type=int)
     if page == -1:
         page = (post.comments.count() - 1) / current_app.config['FLASKY_COMMENTS_PER_PAGE'] + 1
