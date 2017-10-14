@@ -1,16 +1,20 @@
-/* navigation */
-.navbar {
-    background-color: #ffffff;
-    border-color: #ffffff;
+body {
+    background-image: url("./img/squairy_light.png");
 }
 
-.profile-thumbnail {
-    position: absolute;
+.navbar {
+    background-color: #ffffff;
+    border: 1px solid rgba(34, 36, 38, .15);
 }
-.profile-header {
-    min-height: 260px;
-    margin-left: 280px;
+
+.quot {
+    font-family: "Linux Libertine", Baskerville, Georgia, "Liberation Serif", "Kaiti SC", STKaiti, "AR PL UKai CN", "AR PL UKai HK", "AR PL UKai TW", "AR PL UKai TW MBE", "AR PL KaitiM GB", KaiTi, KaiTi_GB2312, "TW-Kai", serif;
 }
+.page {
+    background-color: #ffffff;
+    box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.65);
+}
+
 div.post-tabs {
     margin-top: 16px;
 }
@@ -48,6 +52,17 @@ div.post-content {
 }
 div.post-footer {
 }
+.post-body h1 {
+    font-size: 140%;
+}
+.post-body h2 {
+    font-size: 130%;
+}
+.post-body h3 {
+    font-size: 120%;
+}
+
+
 ul.comments {
     list-style-type: none;
     padding: 0px;
@@ -80,12 +95,14 @@ div.comment-content {
 div.comment-form {
     margin: 16px 0px 16px 32px;
 }
+
 div.pagination {
     width: 100%;
     text-align: right;
     padding: 0px;
     margin: 0px;
 }
+
 div.flask-pagedown-preview {
     margin: 10px 0px 10px 0px;
     border: 1px solid #e0e0e0;
@@ -99,17 +116,4 @@ div.flask-pagedown-preview h2 {
 }
 div.flask-pagedown-preview h3 {
     font-size: 120%;
-}
-.post-body h1 {
-    font-size: 140%;
-}
-.post-body h2 {
-    font-size: 130%;
-}
-.post-body h3 {
-    font-size: 120%;
-}
-
-body {
-    background-image: url("./img/squairy_light.png");
 }
