@@ -11,7 +11,7 @@ from .extensions import (
     login_manager, mail, moment, oauth, oid,
     pagedown, principals, rest_api
 )
-from .models import Role, Follow, User, Post, Comment, Tag 
+from .models import Role, User, Post, Comment, Tag
 
 admin_permission = Permission(RoleNeed('admin'))
 poster_permission = Permission(RoleNeed('poster'))
@@ -52,7 +52,7 @@ def configuration_ext(app):
 
     admin.init_app(app)
     admin.add_view(CustomView(name='Custom'))
-    models = [Role, Follow, User, Post, Comment, Tag]
+    models = [Role, User, Post, Comment, Tag]
     for model in models:
         admin.add_view(
             CustomModelView(model, db.session, category='models')

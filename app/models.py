@@ -15,7 +15,6 @@ from app.exceptions import ValidationError
 
 
 class Permission:
-    FOLLOW = 0x01
     COMMENT = 0x02
     WRITE_ARTICLES = 0x04
     MODERATE_COMMENTS = 0x08
@@ -42,11 +41,9 @@ class Role(db.Model):
     def insert_roles():
         roles = {
             'User': (
-                Permission.FOLLOW |
                 Permission.COMMENT |
                 Permission.WRITE_ARTICLES, True),
             'Moderator': (
-                Permission.FOLLOW |
                 Permission.COMMENT |
                 Permission.WRITE_ARTICLES |
                 Permission.MODERATE_COMMENTS, False),
@@ -60,13 +57,6 @@ class Role(db.Model):
             role.default = roles[r][1]
             db.session.add(role)
         db.session.commit()
-
-
-class Follow(db.Model):
-    __tablename__ = 'follows'
-    follower_id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
-    followed_id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
-    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
 
 
 class User(UserMixin, db.Model):
@@ -89,20 +79,6 @@ class User(UserMixin, db.Model):
     last_seen = db.Column(db.DateTime(), default=datetime.utcnow)
     avatar_hash = db.Column(db.String(32))
     posts = db.relationship('Post', backref='author', lazy='dynamic')
-    followed = db.relationship(
-        'Follow', 
-        foreign_keys=[Follow.follower_id], 
-        backref=db.backref('follower', lazy='joined'), 
-        lazy='dynamic', 
-        cascade='all, delete-orphan'
-    )
-    followers = db.relationship(
-        'Follow', 
-        foreign_keys=[Follow.followed_id], 
-        backref=db.backref('followed', lazy='joined'), 
-        lazy='dynamic', 
-        cascade='all, delete-orphan'
-    )
     comments = db.relationship('Comment', backref='author', lazy='dynamic')
 
     def __init__(self, **kwargs):
@@ -113,7 +89,6 @@ class User(UserMixin, db.Model):
 
         if self.email is not None and self.avatar_hash is None:
             self.avatar_hash = hashlib.md5(self.email.encode('utf-8')).hexdigest()
-        self.follow(self)
 
     def __repr__(self):
         return '<User %r>' % self.username
@@ -141,14 +116,6 @@ class User(UserMixin, db.Model):
                 db.session.commit()
             except IntegrityError:
                 db.session.rollback()
-    
-    @staticmethod
-    def add_self_follows():
-        for user in User.query.all():
-            if not user.is_following(user):
-                user.follow(user)
-                db.session.add(user)
-                db.session.commit()
 
     @staticmethod
     def verify_auth_token(token):
@@ -159,10 +126,6 @@ class User(UserMixin, db.Model):
             return None
         return User.query.get(data['id'])
 
-    @property
-    def followed_posts(self):
-        return Post.query.join(Follow, Follow.followed_id == Post.author_id) \
-            .filter(Follow.follower_id == self.id)
 
     @property
     def password(self):
@@ -229,23 +192,6 @@ class User(UserMixin, db.Model):
         hash = self.avatar_hash or hashlib.md5(self.email.encode('utf-8')).hexdigest()
         return '{url}/{hash}?s={size}&d={default}&r={rating}'.format(
             url=url, hash=hash, size=size, default=default, rating=rating)
-    
-    def follow(self, user):
-        if not self.is_following(user):
-            f = Follow(follower=self, followed=user)
-            db.session.add(f)
-    
-    def unfollow(self, user):
-        f = self.followed.filter_by(followed_id=user.id).first()
-        if f:
-            db.session.delete(f)
-    
-    def is_following(self, user):
-        # return self.followed.filter_by(followed_id=user.id).first() is not None
-        return False
-    
-    def is_follow_by(self, user):
-        return self.followers.filter_by(follower_id=user.id).first() is not None
 
     def to_json(self):
         json_user = {
@@ -254,10 +200,6 @@ class User(UserMixin, db.Model):
             'member_since': self.member_since,
             'last_seen': self.last_seen,
             'posts': url_for('api.get_user_posts', id=self.id, _external=True),
-            'followed_posts': url_for(
-                'api.get_user_followed_post',
-                id=self.id, _external=True
-            ),
             'post_count': self.posts.count()
         }
         return json_user
