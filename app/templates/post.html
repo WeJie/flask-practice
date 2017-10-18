@@ -7,16 +7,10 @@ Post
 {% endblock %}
 
 {% block page_content %}
-    <div class="post-content">
+    <article>
         <h3 class="post-title"/>
         <div class="post-date"> {{ moment(post.timestamp).fromNow() }} </div>
-        <div class="post-body">
-            {% if post.body_html %}
-                {{ post.body_html }}
-            {% else %}
-                {{ post.body }}
-            {% endif %}
-        </div>
+        <div class="post-body"> {{ post.body }} </div>
         <div class="post-footer">
             {% if current_user == post.author %}
             <a href="{{ url_for('.edit', post_id=post.id) }}">
@@ -24,13 +18,14 @@ Post
             </a>
             {% endif %}
         </div>
-    </div>
+    </article>
 
     {% include '_comments.html' %}
+
     {% if pagination %}
-    <div class="pagination">
-        {{ macros.pagination_widget(pagination, '.post', fragment='#comments', post_id=post.id) }}
-    </div>
+        <div class="pagination">
+            {{ macros.pagination_widget(pagination, '.post', fragment='#comments', post_id=post.id) }}
+        </div>
     {% endif %}
 {% endblock %}
 
