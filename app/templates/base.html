@@ -8,21 +8,19 @@
 {% endblock %}
 
 {% block navbar %}
-    {% include 'navbar.html' %}
+    {% include '_navbar.html' %}
 {% endblock %}
 
 {% block content %}
     <div class="container page">
-        {% include 'message.html' %}
-
-        <h1 class="quot"> May the force be with you. </h1>
+        {% include '_message.html' %}
 
         {% block page_content %}
         {% endblock %}
     </div>
 
     {% block footer %}
-        {% include 'footer.html' %}
+        {% include '_footer.html' %}
     {% endblock %}
 
 {% endblock %}
