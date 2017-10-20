@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Archives
+{% endblock %}
+
+{% block page %}
+    <article>
+        <header>Archive</header>
+        <div>
+            <section>
+                {% for posts_by_year, year in posts %}
+                    <div>
+                        <h2>{{ year }}</h2>
+                        <div>
+                            {% for post in posts_by_year %}
+                                <li>
+                                    <div> {{ post.title }} </div>
+                                    <div> {{ post.timestamp }}</div>
+                                </li>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </section>
+
+            <aside>
+                Hello World
+            </aside>
+        </div>
+    </article>
+{% endblock %}
+

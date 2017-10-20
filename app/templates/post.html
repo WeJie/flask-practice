@@ -1,12 +1,10 @@
 {% extends "base.html" %}
-{% import "bootstrap/wtf.html" as wtf %}
-{% import "_macros.html" as macros %}
 
 {% block title%}
     {{ post.title }}
 {% endblock %}
 
-{% block page_content %}
+{% block page %}
     <article>
         <header>
             <h1> {{ post.title }} </h1>

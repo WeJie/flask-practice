@@ -40,6 +40,21 @@ def index():
     return render_template('index.html', posts=posts, pagination=pagination)
 
 
+@main.route('/archive/')
+def archive():
+    return render_template('archive.html', posts=[])
+
+
+@main.route('/tags/')
+def tags():
+    return "I'm tags."
+
+
+@main.route('/about/')
+def about():
+    return "I'm about."
+
+
 @main.route('/hello')
 def hello():
     return "Hello"
