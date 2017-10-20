@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Tags
+{% endblock %}
+
+{% block page %}
+    <article>
+        <header>Tags</header>
+        <div>
+            <section>
+                {% for posts_by_tag, tag in posts %}
+                    <div>
+                        <h2>{{ tag }}</h2>
+                        <div>
+                            {% for post in posts_by_tag %}
+                                <li>
+                                    <div> {{ post.title }} </div>
+                                    <div> {{ post.timestamp }}</div>
+                                </li>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </section>
+            <aside>tag list</aside>
+        </div>
+    </article>
+{% end block %}
