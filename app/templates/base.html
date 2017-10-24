@@ -1,32 +1,34 @@
 {% extends "bootstrap/base.html" %}
 
 {% block head %}
-    {{ super() }}
-    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
-    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+  {{ super() }}
+  <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+  <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
 {% endblock %}
 
 {% block navbar %}
-    {% include '_navbar.html' %}
+  {{ super() }}
+  {% include '_navbar.html' %}
 {% endblock %}
 
 {% block content %}
-    {% include '_message.html' %}
+  {{ super() }}
+  {% include '_message.html' %}
 
-    <div class="container page">
-        {% block page%}
-        {% endblock %}
-    </div>
-
-    {% block footer %}
-        {% include '_footer.html' %}
+  <div class="page">
+    {% block page%}
     {% endblock %}
+  </div>
+
+  {% block footer %}
+    {% include '_footer.html' %}
+  {% endblock %}
 
 {% endblock %}
 
 
 {% block scripts %}
-    {{ super() }}
-    {{ moment.include_moment() }}
+  {{ super() }}
+  {{ moment.include_moment() }}
 {% endblock %}
