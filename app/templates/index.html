@@ -3,17 +3,19 @@
 
 
 {% block page %}
-    <h1 class="quot"> May the force be with you. </h1>
+    <div class="page">
+      <h1 class="quot"> May the force be with you. </h1>
 
-    <div>
-        {% include '_brief_posts.html' %}
+      <div>
+          {% include '_brief_posts.html' %}
+      </div>
+
+      {% if pagination %}
+          <div class="pagination">
+              {{ macros.pagination_widget(pagination, '.index')}}
+          </div>
+      {% endif %}
     </div>
-
-    {% if pagination %}
-        <div class="pagination">
-            {{ macros.pagination_widget(pagination, '.index')}}
-        </div>
-    {% endif %}
 {% endblock %}
 
 {% block scripts %}

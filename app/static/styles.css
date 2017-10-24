@@ -5,14 +5,24 @@ body {
 .navbar {
     background-color: #ffffff;
     border: 1px solid rgba(34, 36, 38, .15);
+    margin: 0px;
 }
 
 .quot {
     font-family: "Linux Libertine", Baskerville, Georgia, "Liberation Serif", "Kaiti SC", STKaiti, "AR PL UKai CN", "AR PL UKai HK", "AR PL UKai TW", "AR PL UKai TW MBE", "AR PL KaitiM GB", KaiTi, KaiTi_GB2312, "TW-Kai", serif;
 }
-.page {
+
+div.page-container {
     background-color: #ffffff;
+    border-width: 1px;
     box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.65);
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+div.page {
+    padding: 5%;
+    margin-top: 3%;
 }
 
 ul.posts {
