@@ -8,8 +8,17 @@ body {
     margin: 0px;
 }
 
-.quot {
+.article-header {
+    padding: 5% 0px 0px 0px;
+}
+
+.font {
     font-family: "Linux Libertine", Baskerville, Georgia, "Liberation Serif", "Kaiti SC", STKaiti, "AR PL UKai CN", "AR PL UKai HK", "AR PL UKai TW", "AR PL UKai TW MBE", "AR PL KaitiM GB", KaiTi, KaiTi_GB2312, "TW-Kai", serif;
+}
+.quot {
+    margin: 0;
+    padding-bottom: 3%;
+    border-bottom: 1px solid #e0e0e0;
 }
 
 div.page-container {
@@ -20,7 +29,7 @@ div.page-container {
     margin-right: 5%;
 }
 
-div.page {
+article.page {
     padding: 5%;
     margin-top: 3%;
 }
@@ -28,26 +37,46 @@ div.page {
 ul.posts {
     list-style-type: none;
     padding: 0px;
-    margin: 16px 0px 0px 0px;
-    border-top: 1px solid #e0e0e0;
-}
-div.post-tabs ul.posts {
     margin: 0px;
-    border-top: none;
 }
+
 ul.posts li.post {
-    padding: 8px;
+    min-height: 48px;
     border-bottom: 1px solid #e0e0e0;
 }
 ul.posts li.post:hover {
     background-color: #f0f0f0;
 }
 
-div.post-content {
-    margin-left: 48px;
-    min-height: 48px;
+li.post {
+    padding-top: 5%;
+    padding-bottom: 5%;
 }
+div.post-header{
+    margin: 0 0 3% 0;
+}
+
+div.post-header h2 {
+    margin: 0;
+}
+
+div.post-date {
+    color: rgba(0, 0, 0, 0.6);
+}
+
+div.post-body {
+    margin-top: 3%;
+    margin-bottom: 3%;
+}
+
 div.post-footer {
+    padding-top: 3%;
+    padding-bottom: 3%;
+}
+
+div.post-footer a {
+    padding: 2% 4% 2% 4%;
+    border: 1px solid rgba(34, 36, 38, .15);
 }
 
 div.pagination {
