@@ -43,7 +43,6 @@ article.page {
     flex: 1;
     padding: 5%;
     margin-top: 3%;
-    margin-bottom: 5%;
 }
 
 ul.posts {
@@ -108,6 +107,12 @@ div.flask-pagedown-preview h2 {
 }
 div.flask-pagedown-preview h3 {
     font-size: 120%;
+}
+
+.btn-center-bottom {
+    width: 100%;
+    margin-top:3%;
+    border: 1px solid #e0e0e0;
 }
 
 footer {

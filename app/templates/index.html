@@ -1,6 +1,4 @@
 {% extends "base.html" %}
-{% import "_macros.html" as macros %}
-
 
 {% block page %}
     <article class="page">
@@ -12,7 +10,7 @@
           {% include '_brief_posts.html' %}
       </section>
       <div>
-        <a class="btn btn-default" style="width: 100%;" href="{{ url_for('main.archive') }}">Post Archive</a>
+        <a class="btn btn-center-bottom" href="{{ url_for('main.archive') }}">Posts Archive</a>
       </div>
     </article>
 {% endblock %}
