@@ -11,12 +11,9 @@
       <section>
           {% include '_brief_posts.html' %}
       </section>
-
-      {% if pagination %}
-          <div class="pagination">
-              {{ macros.pagination_widget(pagination, '.index')}}
-          </div>
-      {% endif %}
+      <div>
+        <a class="btn btn-default" style="width: 100%;" href="{{ url_for('main.archive') }}">Post Archive</a>
+      </div>
     </article>
 {% endblock %}
 
