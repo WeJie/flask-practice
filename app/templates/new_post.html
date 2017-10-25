@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %} New Post {% endblock %}
+
+{% block page%}
+  <article class="page">
+    <header>
+      <h2>New Post</h2>
+    </header>
+    <section>
+      {{ wtf.quick_form(form) }}
+    </section>
+
+  </article>
+{% endblock %}
+
+{% block scripts %}
+  {{ super() }}
+  {{ pagedown.include_pagedown() }}
+{% endblock %}

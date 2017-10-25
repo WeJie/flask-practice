@@ -80,7 +80,7 @@ def create_post():
         )
         db.session.add(post)
         return redirect(url_for('.index'))
-    return render_template('post.html', form=form)
+    return render_template('new_post.html', form=form)
 
 
 @main.route('/edit/<int:post_id>', methods=['GET', 'POST'])
