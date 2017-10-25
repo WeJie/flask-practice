@@ -41,8 +41,7 @@ article.page {
     display: flex;
     flex-direction: column;
     flex: 1;
-    padding: 5%;
-    margin-top: 3%;
+    padding: 4%;
 }
 
 ul.posts {
