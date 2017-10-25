@@ -10,9 +10,7 @@
             <h1> {{ post.title }} </h1>
             <hr/>
         </header>
-        <div>
-            <section> {{ post.body }} </section>
-        </div>
+        <section> {{ post.body_html|safe }} </section>
 
         <div class="post-footer">
             {% if current_user == post.author %}
