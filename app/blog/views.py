@@ -8,9 +8,8 @@ from flask_principal import Permission, RoleNeed
 
 from . import main
 from .. import db
-from .forms import PostForm, NameForm, EditProfileForm, EditProfileAdminForm, CommentForm
-from ..models import User, Post, Comment#, Permission
-from ..decorators import admin_required, permission_required
+from .forms import PostForm, CommentForm
+from ..models import Post, Comment
 
 test_permission = Permission(RoleNeed('tester'))
 
@@ -60,16 +59,8 @@ def hello():
     return "Hello"
 
 
-@main.route('/user/<username>')
-def user(username):
-    user = User.query.filter_by(username=username).first()
-    if user is None:
-        abort(404)
-    posts = user.posts.order_by(Post.timestamp.desc()).all()
-    return render_template('user.html', user=user, posts=posts)
-
-
 @main.route('/post/new/', methods=['GET', 'POST'])
+@login_required
 def create_post():
     form = PostForm()
     if form.validate_on_submit():
@@ -131,6 +122,7 @@ def post(post_id):
 
 
 @main.route('/shutdown')
+@login_required
 def server_shutdown():
     if not current_app.testing:
         abort(404)
