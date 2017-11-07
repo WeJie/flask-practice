@@ -7,7 +7,7 @@ from flask_sqlalchemy import get_debug_queries
 from flask_principal import Permission, RoleNeed
 
 from . import main
-from .. import db
+from .. import db, sentry
 from .forms import PostForm, CommentForm
 from ..models import Post, Comment
 
@@ -119,6 +119,26 @@ def post(post_id):
     comments = pagination.items
     return render_template('post.html', post=post, form=form,
                            comments=comments, pagination=pagination)
+
+
+@main.route('/error')
+def error():
+    try:
+        1/0
+    except ZeroDivisionError:
+        sentry.captureException()
+        return 'error'
+
+
+@main.route('/raise')
+def auto_raise():
+    raise IndexError
+
+
+@main.route('/log')
+def log():
+    sentry.captureMessage('hello world!')
+    return 'logging'
 
 
 @main.route('/shutdown')

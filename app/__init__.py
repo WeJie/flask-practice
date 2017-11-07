@@ -9,7 +9,7 @@ from .backend.admin import CustomView, CustomModelView
 from .extensions import (
     admin, debug_toolbar, bootstrap, db,
     login_manager, mail, moment, oauth, oid,
-    pagedown, principals, rest_api
+    pagedown, principals, rest_api, sentry
 )
 from .models import Role, User, Post, Comment, Tag
 
@@ -43,6 +43,7 @@ def configuration_ext(app):
     oid.init_app(app)
     pagedown.init_app(app)
     rest_api.init_app(app)
+    sentry.init_app(app)
 
     login_manager.login_view = 'auth.login'
     login_manager.login_message = "Please login to access this page."
