@@ -126,7 +126,6 @@ class User(UserMixin, db.Model):
             return None
         return User.query.get(data['id'])
 
-
     @property
     def password(self):
         raise AttributeError('password is not readable attribute')
