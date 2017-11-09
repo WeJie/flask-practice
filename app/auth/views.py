@@ -40,7 +40,7 @@ def reset_pwd():
             current_user.password = form.password_new.data
             flash("Success. Your password have change. Please login again.")
             logout_user()
-            return render_template('auth/login.html', form=LoginForm())
+            return redirect(url_for('auth.login'))
         else:
             flash("Fail. Your current password was wrong.")
 
@@ -58,24 +58,6 @@ def logout():
     logout_user()
     flash('You have been logged out.')
     return redirect(url_for('main.index'))
-
-
-@auth.route('/register', methods=['GET', 'POST'])
-def register():
-    form = RegistrationForm()
-    if form.validate_on_submit():
-        user = User(
-            email=form.email.data,
-            username=form.username.data,
-            password=form.password.data)
-        db.session.add(user)
-        db.session.commit()
-        flash('You can now login.')
-        return redirect(url_for('auth.login'))
-    return render_template(
-        'auth/register.html', 
-        form=form, 
-        public_key=current_app.config['RECAPTCHA_PUBLIC_KEY'])
 
 
 @auth.before_app_request
