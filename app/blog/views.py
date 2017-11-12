@@ -92,7 +92,7 @@ def edit(post_id):
 
     form.body.data = post.body
     form.title.data = post.title
-    return render_template('edit_post.html', form=form)
+    return render_template('edit_post.html', form=form, post_id=post.id)
 
 
 @main.route('/post/<int:post_id>', methods=['GET','POST'])

@@ -10,10 +10,10 @@ from flask_mail import Mail
 from flask_moment import Moment 
 from flask_oauth import OAuth
 from flask_openid import OpenID
-from flask_pagedown import PageDown
 from flask_principal import Principal
 from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy
+
 from raven.contrib.flask import Sentry
 
 admin = Admin()
@@ -26,7 +26,6 @@ mail = Mail()
 moment = Moment()
 oauth = OAuth()
 oid = OpenID()
-pagedown = PageDown()
 principals = Principal()
 rest_api = Api()
 sentry = Sentry(dsn='http://80bf021dd8054967a01ea372283f9999:914124d69f18487c888e9f565ce43de7@0.0.0.0:9000/2')

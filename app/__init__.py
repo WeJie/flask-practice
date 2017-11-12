@@ -9,7 +9,7 @@ from .backend.admin import CustomView, CustomModelView
 from .extensions import (
     admin, debug_toolbar, bootstrap, db,
     login_manager, mail, moment, oauth, oid,
-    pagedown, principals, rest_api, sentry
+    principals, rest_api, sentry
 )
 from .models import Role, User, Post, Comment, Tag
 
@@ -41,7 +41,6 @@ def configuration_ext(app):
     mail.init_app(app)
     moment.init_app(app)
     oid.init_app(app)
-    pagedown.init_app(app)
     rest_api.init_app(app)
     sentry.init_app(app)
 

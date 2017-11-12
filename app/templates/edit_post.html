@@ -3,19 +3,46 @@
 
 {% block title %} Edit Post {% endblock %}
 
+
+{% block head %}
+  {{ super() }}
+  <link rel="stylesheet" href="{{ url_for('static',filename='editormd/css/editormd.css') }}"/>
+{% endblock %}
+
 {% block page%}
   <article class="page">
-    <header>
-      <h2>Edit Post</h2>
-    </header>
-    <section>
-      {{ wtf.quick_form(form) }}
-    </section>
+    <section >
+      <form method="post" role="form">
+        {{ form.hidden_tag() }}
+        {{ wtf.form_errors(form, hiddens="only") }}
 
+        {{ wtf.form_field(form.title)}}
+
+        <div class="form-group">
+          {{ form.body.label }}
+          <div id="editormd">
+            {{ form.body(style="display:none;")|safe }}
+          </div>
+        </div>
+
+        {{ wtf.form_field(form.submit) }}
+      </form>
+    </section>
   </article>
 {% endblock %}
 
 {% block scripts %}
   {{ super() }}
-  {{ pagedown.include_pagedown() }}
+  <script src="{{ url_for('static',filename='editormd/editormd.min.js') }}"></script>
+  <script type="text/javascript">
+      var editor;
+
+      $(function () {
+          editor = editormd("editormd", {
+              height: 640,
+              syncScrolling: "single",
+              path: "{{ url_for('static',filename='editormd/lib/') }}"
+          });
+      });
+  </script>
 {% endblock %}
