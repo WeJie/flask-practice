@@ -67,6 +67,7 @@ def create_post():
         post = Post(
             title=form.title.data,
             body=form.body.data,
+            body_html=form.body_html.data,
             author=current_user._get_current_object()
         )
         db.session.add(post)
@@ -85,6 +86,7 @@ def edit(post_id):
 
     if form.validate_on_submit():
         post.body = form.body.data
+        post.body_html = form.body_html.data
         post.title = form.title.data
         db.session.add(post)
         flash('The post has been updated.')
@@ -95,7 +97,7 @@ def edit(post_id):
     return render_template('edit_post.html', form=form, post_id=post.id)
 
 
-@main.route('/post/<int:post_id>', methods=['GET','POST'])
+@main.route('/post/<int:post_id>', methods=['GET', 'POST'])
 def post(post_id):
     post = Post.query.get_or_404(post_id)
     form = CommentForm()

@@ -50,6 +50,7 @@ class EditProfileAdminForm(FlaskForm):
 class PostForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired(), Length(0, 32)])
     body = TextAreaField('', validators=[DataRequired()])
+    body_html = TextAreaField('', validators=[DataRequired()])
     submit = SubmitField('Submit')
 
 
