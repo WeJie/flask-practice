@@ -7,6 +7,8 @@ def host_type():
 def hello():
     print "hello world!"
 
+def ls(path='.'):
+    local('ls {}',format(path))
 
 def prepare_deploy():
     #local("python manage.py test my_app")
