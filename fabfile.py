@@ -12,5 +12,5 @@ def ls(path='.'):
 
 def prepare_deploy():
     #local("python manage.py test my_app")
-    local("git add -i && git commit -p --interactive")
+    local("git add -p && git commit")
     local("git push")
