@@ -111,3 +111,6 @@ migrations/
 
 # PyCharm
 .idea/
+
+# fabric
+fabfile.py
