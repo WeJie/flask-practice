@@ -1,19 +1,10 @@
 #! /bin/bash
 mkdir app
-touch app/__init__.py
-touch app/email.py
-touch app/models.py
-mkdir app/templates
-mkdir app/static
-mkdir app/main
-touch app/main/__init__.py
-touch app/main/errors.py
-touch app/main/forms.py
-touch app/main/views.py
+mkdir app/{templates,static,main}
 mkdir migrations
 mkdir tests
-touch tests/__init__.py
-touch tests/test.py
-touch config.py
-touch manage.py
+touch app/{__init__,email,models}.py
+touch app/main/{__init__,errors,forms,views}.py
+touch tests/{__init__,test}.py
+touch {config,manage}.py
 
