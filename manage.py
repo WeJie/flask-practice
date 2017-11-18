@@ -1,16 +1,15 @@
 #! /usr/bin/env python
+import os
+from app import create_app, db
+from app.models import User, Role, Post
+from flask_script import Manager, Shell
+from flask_migrate import Migrate, MigrateCommand, upgrade
 
-import os 
 COV = None
 if os.environ.get('FLASK_COVERAGE'):
     import coverage 
     COV = coverage.coverage(branch=True, include='app/*')
     COV.start()
-
-from app import create_app, db
-from app.models import User, Role, Post
-from flask_script import Manager, Shell
-from flask_migrate import Migrate, MigrateCommand, upgrade
 
 
 app = create_app(os.getenv('FLASK_CONFIG') or 'default')
