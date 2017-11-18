@@ -18,6 +18,7 @@
         {{ form.hidden_tag() }}
         {{ wtf.form_errors(form, hiddens="only") }}
         {{ wtf.form_field(form.title)}}
+        {{ wtf.form_field(form.digest)}}
 
         <div class="form-group">
           {{ form.body.label }}

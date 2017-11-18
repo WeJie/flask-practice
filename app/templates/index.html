@@ -1,5 +1,13 @@
 {% extends "base.html" %}
 
+{% block head %}
+  {{ super() }}
+  <link rel="stylesheet" href="{{ url_for('static',filename='editormd/css/editormd.preview.min.css') }}"/>
+  <link type="text/css" rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.3.0/katex.min.css">
+  <script id="-cdnjs-cloudflare-com-ajax-libs-KaTeX-0-3-0-katex-min" type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.3.0/katex.min.js"></script>
+{% endblock %}
+
+
 {% block page %}
     <article class="page">
       <header class="article-header">

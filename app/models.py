@@ -214,7 +214,8 @@ class AnonymousUser(AnonymousUserMixin):
 class Post(db.Model):
     __tablename__ = 'post'
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(32))
+    title = db.Column(db.String(255))
+    digest = db.Column(db.Text)
     body = db.Column(db.Text)
     body_html = db.Column(db.Text)
     brief_body_html = db.Column(db.Text)

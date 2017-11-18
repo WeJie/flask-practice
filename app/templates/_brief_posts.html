@@ -6,7 +6,9 @@
             <div class="post-date"> {{ moment(post.timestamp).fromNow() }} </div>
           </div>
 
-          <div class="post-body"> {{ post.body_html|safe }} </div>
+          <div class="post-digest markdown-body editormd-html-preview">
+            {{ post.digest| markdown }}
+          </div>
 
           <div class="post-footer">
               {% if current_user == post.author %}

@@ -66,6 +66,7 @@ def create_post():
     if form.validate_on_submit():
         post = Post(
             title=form.title.data,
+            digest=form.digest.data,
             body=form.body.data,
             body_html=form.body_html.data,
             author=current_user._get_current_object()
@@ -85,15 +86,18 @@ def edit(post_id):
     form = PostForm()
 
     if form.validate_on_submit():
+        post.title = form.title.data
+        post.digest = form.digest.data
         post.body = form.body.data
         post.body_html = form.body_html.data
-        post.title = form.title.data
         db.session.add(post)
+
         flash('The post has been updated.')
         return redirect(url_for('.post', post_id=post.id))
 
-    form.body.data = post.body
     form.title.data = post.title
+    form.digest.data = post.digest
+    form.body.data = post.body
     return render_template('edit_post.html', form=form, post_id=post.id)
 
 

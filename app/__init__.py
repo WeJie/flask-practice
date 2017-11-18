@@ -3,6 +3,7 @@
 from flask import Flask
 from flask_login import current_user
 from flask_principal import identity_loaded, RoleNeed, UserNeed, Permission
+from flaskext.markdown import Markdown
 
 from config import config
 from .backend.admin import CustomView, CustomModelView
@@ -43,6 +44,7 @@ def configuration_ext(app):
     oid.init_app(app)
     rest_api.init_app(app)
     sentry.init_app(app)
+    Markdown(app)
 
     login_manager.login_view = 'auth.login'
     login_manager.login_message = "Please login to access this page."
