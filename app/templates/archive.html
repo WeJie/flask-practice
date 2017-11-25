@@ -15,8 +15,8 @@
                         <div>
                             {% for post in posts_by_year %}
                                 <li>
-                                    <div> {{ post.title }} </div>
-                                    <div> {{ post.timestamp }}</div>
+                                  <div><a href="{{ url_for('.post', post_id=post.id) }}"> {{ post.title }} </a></div>
+                                  <div> {{ post.timestamp }}</div>
                                 </li>
                             {% endfor %}
                         </div>

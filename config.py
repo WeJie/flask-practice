@@ -14,6 +14,7 @@ class Config:
     MAIL_USE_TLS = True
     MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
+
     FLASKY_MAIL_SUBJECT_PREFIX = '[Flasky]'
     FLASKY_MAIL_SENDER = 'Flasky Admin <name@gmail.com>'
     FLASKY_ADMIN = os.environ.get('FLASK_ADMIN')
@@ -24,6 +25,11 @@ class Config:
     FLASKY_SLOW_DB_QUERY_TIME = 0.5 
     RECAPTCHA_PUBLIC_KEY='6LcrtCcUAAAAAPWHYTrilK7O7LydPa4j-fjYH49K'
     RECAPTCHA_PRIVATE_KEY=''
+
+
+    # GitHub
+    GITHUB_CLIENT_ID = os.environ.get('GITHUB_CLIENT_ID')
+    GITHUB_CLIENT_SECRET = os.environ.get('GITHUB_CLIENT_SECRET')
 
     @staticmethod
     def init_app(app):
